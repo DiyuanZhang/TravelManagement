@@ -1,6 +1,6 @@
 using System;
 
-namespace TravelManagement
+namespace TravelManagement.Domain.Models
 {
     public class WeatherForecast
     {

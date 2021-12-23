@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TravelManagement.Domain.Models;
 
-namespace TravelManagement.Controllers
+namespace TravelManagement.Interface.Controllers
 {
     [ApiController]
     [Route("[controller]")]
