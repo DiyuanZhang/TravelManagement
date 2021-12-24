@@ -1,3 +1,4 @@
+using Azure.Messaging.ServiceBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +19,8 @@ namespace TravelManagement
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureCommonServices(services);
-            services.AddSession(Configuration["DBConnectionString"]);
+            services.AddAzureServiceBus(Configuration["ServiceBusConnectionString"], Configuration["ServiceBusQueue"]);
+            // services.AddSession(Configuration["DBConnectionString"]);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

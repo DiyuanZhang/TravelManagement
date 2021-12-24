@@ -18,7 +18,7 @@ namespace TravelManagement.Test.ControllerFactsSetup
 
 			var fluentConfiguration = Fluently.Configure()
 				.Database(SQLiteConfiguration.Standard.InMemory().ConnectionString("Data Source=:memory:;Version=3;New=True;DateTimeKind=Utc;"))
-				.Mappings(m => m.FluentMappings.AddFromAssemblyOf<OrderMapping>())
+				.Mappings(m => m.FluentMappings.AddFromAssemblyOf<FlightOrderRequestMapping>())
 				.CurrentSessionContext<ThreadStaticSessionContext>()
 				.ExposeConfiguration(c => inMemDbConfiguration = c);
 

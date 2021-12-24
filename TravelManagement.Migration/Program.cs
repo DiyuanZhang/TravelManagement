@@ -24,7 +24,7 @@ namespace TravelManagement.Migration
                     .AddSqlServer2012()
                     .WithGlobalConnectionString(
                         DBConnectionString)
-                    .ScanIn(typeof(CreateOrdersTable).Assembly).For.Migrations())
+                    .ScanIn(typeof(CreateFlightOrderRequestsTable).Assembly).For.Migrations())
                 .AddLogging(lb => lb.AddFluentMigratorConsole())
                 .BuildServiceProvider(false);
         }
