@@ -1,10 +1,13 @@
 using System;
+using System.Linq;
 using Moq;
+using Newtonsoft.Json;
 using TravelManagement.Application.Dtos;
 using TravelManagement.Application.Providers;
 using TravelManagement.Application.Services;
 using TravelManagement.Domain.Models;
 using TravelManagement.Domain.Services;
+using TravelManagement.Test.ApplicationFactsSetup;
 using Xunit;
 using static TravelManagement.Test.Fixtures.Fixtures;
 using FlightOrder = TravelManagement.Domain.Models.FlightOrder;
@@ -31,7 +34,7 @@ namespace TravelManagement.Test.ApplicationServiceFacts
 			
 			var mockApprovalSystemProvider = new Mock<IApprovalSystemProvider>();
 			
-			var flightOrderService = new FlightOrderService(mockFlightOrderDomainService.Object, mockApprovalSystemProvider.Object);
+			var flightOrderService = new FlightOrderService(mockFlightOrderDomainService.Object, mockApprovalSystemProvider.Object, new InMemoryMessageSender());
 			flightOrderService.CreateFlightOrderRequest(userId, defaultCreateFlightOrderRequest);
 
 			mockFlightOrderDomainService.Verify(s => s.CreateFlightOrderRequest(userId, defaultCreateFlightOrderRequest.FlightNumber, defaultCreateFlightOrderRequest.Amount, defaultCreateFlightOrderRequest.DepartureDate));
@@ -56,10 +59,42 @@ namespace TravelManagement.Test.ApplicationServiceFacts
 			
 			var mockApprovalSystemProvider = new Mock<IApprovalSystemProvider>();
 			
-			var flightOrderService = new FlightOrderService(mockFlightOrderDomainService.Object, mockApprovalSystemProvider.Object);
+			var flightOrderService = new FlightOrderService(mockFlightOrderDomainService.Object, mockApprovalSystemProvider.Object, new InMemoryMessageSender());
 			flightOrderService.ConfirmFlightOrderRequest(flightOrder.FlightOrderRequest.Id);
 			
 			mockFlightOrderDomainService.Verify(s => s.ConfirmFlightOrderRequest(flightOrder.FlightOrderRequest.Id));
+		}
+		
+		[Fact]
+		public void should_send_message_to_message_queue_when_confirm_flight_order()
+		{
+			var flightOrderRequest = Build(FlightOrderRequest())
+				.With(r => r.Id = 10L)
+				.Default();
+			var flightOrder = Build(FlightOrder())
+				.With(o => o.Id = 20L)
+				.With(o => o.FlightOrderRequest = flightOrderRequest)
+				.Default();
+
+			var mockFlightOrderDomainService = new Mock<FlightOrderDomainService>();
+			mockFlightOrderDomainService.Setup(s => s.ConfirmFlightOrderRequest(flightOrder.FlightOrderRequest.Id)).Returns(flightOrder);
+			
+			var mockApprovalSystemProvider = new Mock<IApprovalSystemProvider>();
+
+			var inMemoryMessageSender = new InMemoryMessageSender();
+			var flightOrderService = new FlightOrderService(mockFlightOrderDomainService.Object, mockApprovalSystemProvider.Object, inMemoryMessageSender);
+			flightOrderService.ConfirmFlightOrderRequest(flightOrder.FlightOrderRequest.Id);
+
+			var allSentMessages = inMemoryMessageSender.GetAllSentMessages();
+			Assert.Single(allSentMessages);
+			var flightOrderDto = JsonConvert.DeserializeObject<FlightOrderDto>(allSentMessages.Single());
+			Assert.Equal(flightOrder.Id, flightOrderDto.Id);
+			Assert.Equal(flightOrder.CreatedAt, flightOrderDto.CreatedAt);
+			Assert.Equal(flightOrderRequest.Id, flightOrderDto.FlightOrderRequestId);
+			Assert.Equal(flightOrderRequest.UserId, flightOrderDto.UserId);
+			Assert.Equal(flightOrderRequest.Amount, flightOrderDto.Amount);
+			Assert.Equal(flightOrderRequest.DepartureDate, flightOrderDto.DepartureDate);
+			Assert.Equal(flightOrderRequest.FlightNumber, flightOrderDto.FlightNumber);
 		}
 		
 		private CreateFlightOrderRequest GetDefaultCreateFlightOrderRequest()

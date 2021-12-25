@@ -40,7 +40,7 @@ namespace TravelManagement
         {
             services.AddHttpClient<IApprovalSystemProvider, ApprovalSystemProvider>(
                     name: "Approval System Provider")
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration["NotificationServiceUrl"]));
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration["ApprovalSystemUrl"]));
         }
 
         public static void AddApplicationService(this IServiceCollection services)

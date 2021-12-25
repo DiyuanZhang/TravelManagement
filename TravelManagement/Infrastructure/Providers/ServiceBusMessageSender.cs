@@ -1,5 +1,6 @@
 using System;
-using System.Threading.Tasks;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -18,18 +19,23 @@ namespace TravelManagement.Infrastructure.Providers
 			_logger = logger;
 		}
 
-		public async Task Send(object messageBody)
+		public async void Send(object messageBody)
 		{
 			try
 			{
 				var serviceBusMessage = new ServiceBusMessage(JsonConvert.SerializeObject(messageBody));
-				await _sender.SendMessageAsync(serviceBusMessage);
+				_sender.SendMessageAsync(serviceBusMessage).GetAwaiter().GetResult();
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Fail to send messages to Azure Service Bus: {JsonConvert.SerializeObject(messageBody)}");
 				throw;
 			}
+		}
+
+		public ConcurrentQueue<string> GetAllSentMessages()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

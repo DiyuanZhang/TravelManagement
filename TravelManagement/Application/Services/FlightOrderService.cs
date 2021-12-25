@@ -8,16 +8,17 @@ namespace TravelManagement.Application.Services
 	{
 		private readonly FlightOrderDomainService _flightOrderDomainService;
 		private readonly IApprovalSystemProvider _approvalSystemProvider;
+		private readonly IMessageSender _messageSender;
 
 		public FlightOrderService()
 		{
-			
 		}
 		
-		public FlightOrderService(FlightOrderDomainService flightOrderDomainService, IApprovalSystemProvider approvalSystemProvider)
+		public FlightOrderService(FlightOrderDomainService flightOrderDomainService, IApprovalSystemProvider approvalSystemProvider, IMessageSender messageSender)
 		{
 			_flightOrderDomainService = flightOrderDomainService;
 			_approvalSystemProvider = approvalSystemProvider;
+			_messageSender = messageSender;
 		}
 
 		public virtual long CreateFlightOrderRequest(long userId, CreateFlightOrderRequest createFlightOrderRequest)
@@ -35,6 +36,7 @@ namespace TravelManagement.Application.Services
 		public virtual long ConfirmFlightOrderRequest(long flightOrderRequestId)
 		{
 			var flightOrder = _flightOrderDomainService.ConfirmFlightOrderRequest(flightOrderRequestId);
+			_messageSender.Send(FlightOrderDto.Build(flightOrder));
 			return flightOrder.Id;
 		}
 	}

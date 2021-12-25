@@ -23,7 +23,7 @@ namespace TravelManagement
             services.AddApplicationService();
             services.AddDomainService();
             services.AddAzureServiceBus(Configuration["ServiceBusConnectionString"], Configuration["ServiceBusQueue"]);
-            // services.AddSession(Configuration["DBConnectionString"]);
+            services.AddSession(Configuration["DBConnectionString"]);
             services.AddRepository();
         }
 
