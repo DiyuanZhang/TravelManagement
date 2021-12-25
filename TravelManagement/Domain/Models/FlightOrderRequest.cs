@@ -11,5 +11,11 @@ namespace TravelManagement.Domain.Models
 		public virtual DateTime DepartureDate { get; set; }
 		public virtual DateTime CreatedAt { get; set; }
 		public virtual DateTime ExpiredAt { get; set; }
+
+		public virtual void Create()
+		{
+			CreatedAt = DateTime.UtcNow;
+			ExpiredAt = DateTime.UtcNow.AddMinutes(30);
+		}
 	}
 }

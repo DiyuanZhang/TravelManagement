@@ -1,30 +1,29 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
 using TravelManagement.Application.Dtos;
-using TravelManagement.Application.Providers;
-using TravelManagement.Domain.Models;
+using TravelManagement.Application.Services;
+using TravelManagement.Interface.Filters;
+using TravelManagement.Interface.Validators;
 
 namespace TravelManagement.Interface.Controllers
 {
 	[ApiController]
 	public class FlightOrderController : ControllerBase
 	{
-		private readonly IMessageSender _messageSender;
+		private readonly FlightOrderService _flightOrderService;
+		private readonly CurrentUser _currentUser;
 		
-		public FlightOrderController(IMessageSender messageSender)
+		public FlightOrderController(FlightOrderService flightOrderService, CurrentUser currentUser)
 		{
-			_messageSender = messageSender;
+			_flightOrderService = flightOrderService;
+			_currentUser = currentUser;
 		}
 		
 		[HttpPost("flight-orders")]
-		public OkResult CreateFlightOrderRequest(CreateFlightOrderRequest request)
+		public ActionResult<long> CreateFlightOrderRequest(CreateFlightOrderRequest request)
 		{
-			_messageSender.Send(new FlightOrderRequest
-			{
-				Amount = new decimal(123.45),
-				DepartureDate = DateTime.UtcNow
-			});
-			return Ok();
+			CreateFlightOrderRequestValidator.Validate(request);
+			var flightOrderRequestId = _flightOrderService.CreateFlightOrderRequest(_currentUser.UserId, request);
+			return Ok(flightOrderRequestId);
 		}
 	}
 }

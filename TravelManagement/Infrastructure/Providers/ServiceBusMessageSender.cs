@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using TravelManagement.Application.Providers;
 
-namespace TravelManagement.Application.Providers
+namespace TravelManagement.Infrastructure.Providers
 {
 	public class ServiceBusMessageSender : IMessageSender
 	{

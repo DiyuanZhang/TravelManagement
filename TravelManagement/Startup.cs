@@ -1,4 +1,3 @@
-using Azure.Messaging.ServiceBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using TravelManagement.Interface.Controllers;
+using TravelManagement.Interface.Filters;
 
 namespace TravelManagement
 {
@@ -19,6 +19,8 @@ namespace TravelManagement
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureCommonServices(services);
+            services.AddProviders(Configuration);
+            services.AddApplicationService();
             services.AddAzureServiceBus(Configuration["ServiceBusConnectionString"], Configuration["ServiceBusQueue"]);
             // services.AddSession(Configuration["DBConnectionString"]);
         }
@@ -40,13 +42,18 @@ namespace TravelManagement
 
         public void ConfigureCommonServices(IServiceCollection services)
         {
-            services.AddControllers()
-                .AddApplicationPart(typeof(WeatherForecastController).Assembly);
+            services.AddControllers(options =>
+                {
+                    options.Filters.Add<ServiceExceptionFilter>();
+                    options.Filters.Add<AuthorizationFilter>();
+                })
+                .AddApplicationPart(typeof(FlightOrderController).Assembly);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TravelManagement", Version = "v1" });
             });
             services.AddHealthChecks();
+            services.AddScoped<CurrentUser>();
         }
 
         public void ConfigureCommon(IApplicationBuilder app, IWebHostEnvironment env)

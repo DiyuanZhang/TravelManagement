@@ -11,7 +11,7 @@ namespace TravelManagement.Test.ControllerFactsSetup
 		protected TestMocks TestMocks { get; set; }
 		protected HttpClient HttpClient { get; set; }
 
-		public ControllerFactBase(Action<IServiceCollection> customAction = null)
+		public void Setup(Action<IServiceCollection> customAction = null)
 		{
 			TestMocks = new TestMocks();
 			testServer = TestServerFactory.Create(services =>

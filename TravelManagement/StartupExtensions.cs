@@ -1,11 +1,15 @@
+using System;
 using Azure.Messaging.ServiceBus;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NHibernate;
 using NHibernate.Context;
 using TravelManagement.Application.Providers;
+using TravelManagement.Application.Services;
 using TravelManagement.Infrastructure.Mappings;
+using TravelManagement.Infrastructure.Providers;
 
 namespace TravelManagement
 {
@@ -27,6 +31,18 @@ namespace TravelManagement
                 session.FlushMode = FlushMode.Commit;
                 return session;
             });
+        }
+
+        public static void AddProviders(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddHttpClient<IApprovalSystemProvider, ApprovalSystemProvider>(
+                    name: "Approval System Provider")
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration["NotificationServiceUrl"]));
+        }
+
+        public static void AddApplicationService(this IServiceCollection services)
+        {
+            services.AddScoped<FlightOrderService>();
         }
 
         public static void AddAzureServiceBus(this IServiceCollection services, string serviceBusConnectionString,
