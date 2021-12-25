@@ -5,12 +5,10 @@ using Newtonsoft.Json;
 using TravelManagement.Application.Dtos;
 using TravelManagement.Application.Providers;
 using TravelManagement.Application.Services;
-using TravelManagement.Domain.Models;
 using TravelManagement.Domain.Services;
 using TravelManagement.Test.ApplicationFactsSetup;
 using Xunit;
 using static TravelManagement.Test.Fixtures.Fixtures;
-using FlightOrder = TravelManagement.Domain.Models.FlightOrder;
 using FlightOrderRequest = TravelManagement.Domain.Models.FlightOrderRequest;
 
 namespace TravelManagement.Test.ApplicationServiceFacts
