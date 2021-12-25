@@ -6,26 +6,26 @@ namespace TravelManagement.Test.ControllerFactsSetup
 {
 	public class TestServer : IDisposable
 	{
-		private readonly Microsoft.AspNetCore.TestHost.TestServer testServer;
+		private readonly Microsoft.AspNetCore.TestHost.TestServer _testServer;
 
 		public TestServer(Microsoft.AspNetCore.TestHost.TestServer testServer)
 		{
-			this.testServer = testServer;
+			this._testServer = testServer;
 		}
 
 		public IServiceScope CreateScope()
 		{
-			return testServer.Services.CreateScope();
+			return _testServer.Services.CreateScope();
 		}
 
 		public HttpClient CreateClient()
 		{
-			return testServer.CreateClient();
+			return _testServer.CreateClient();
 		}
 
 		public void Dispose()
 		{
-			testServer?.Dispose();
+			_testServer?.Dispose();
 		}
 	}
 }

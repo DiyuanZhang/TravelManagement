@@ -8,12 +8,17 @@ namespace TravelManagement.Domain.Services
 	{
 		private readonly IFlightOrderRequestRepository _flightOrderRequestRepository;
 
+		public FlightOrderDomainService()
+		{
+			
+		}
+		
 		public FlightOrderDomainService(IFlightOrderRequestRepository flightOrderRequestRepository)
 		{
 			_flightOrderRequestRepository = flightOrderRequestRepository;
 		}
 
-		public long CreateFlightOrderRequest(long userId, string flightNumber, decimal amount, DateTime departureDate)
+		public virtual long CreateFlightOrderRequest(long userId, string flightNumber, decimal amount, DateTime departureDate)
 		{
 			var flightOrderRequest = new FlightOrderRequest
 			{

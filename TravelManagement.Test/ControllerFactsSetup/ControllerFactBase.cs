@@ -6,25 +6,22 @@ namespace TravelManagement.Test.ControllerFactsSetup
 {
 	public abstract class ControllerFactBase : IDisposable
 	{
-		private TestServer testServer;
-		protected IServiceProvider ServiceProvider;
-		protected TestMocks TestMocks { get; set; }
+		private TestServer _testServer;
 		protected HttpClient HttpClient { get; set; }
 
-		public void Setup(Action<IServiceCollection> customAction = null)
+		protected void Setup(Action<IServiceCollection> customAction = null)
 		{
-			TestMocks = new TestMocks();
-			testServer = TestServerFactory.Create(services =>
+			_testServer = TestServerFactory.Create(services =>
 			{
 				customAction?.Invoke(services);
 			});
-			ServiceProvider = testServer.CreateScope().ServiceProvider;
-			HttpClient = testServer.CreateClient();
+			_testServer.CreateScope();
+			HttpClient = _testServer.CreateClient();
 		}
 
 		public void Dispose()
 		{
-			testServer?.Dispose();
+			_testServer?.Dispose();
 			HttpClient?.Dispose();
 		}
 	}
