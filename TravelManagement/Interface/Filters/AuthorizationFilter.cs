@@ -7,12 +7,12 @@ namespace TravelManagement.Interface.Filters
 {
 	public class AuthorizationFilter : IAuthorizationFilter
 	{
-		public const string USER_ID_KEY = "UserId";
+		private const string UserIdKey = "UserId";
 		
 		public void OnAuthorization(AuthorizationFilterContext context)
 		{
 			var headerDictionary = context.HttpContext.Request.Headers;
-			if (!headerDictionary.ContainsKey(USER_ID_KEY) || !long.TryParse(headerDictionary[USER_ID_KEY].First(), out var userId))
+			if (!headerDictionary.ContainsKey(UserIdKey) || !long.TryParse(headerDictionary[UserIdKey].First(), out var userId))
 			{
 				context.Result = new UnauthorizedResult();
 				return;

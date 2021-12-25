@@ -13,22 +13,22 @@ namespace TravelManagement.Test.ApplicationServiceFacts
 		[Fact]
 		public void should_call_domain_service_and_approval_system_when_create_flight_order_request()
 		{
-			long userId = 1L;
-			long flightOrderRequestId = 10L;
+			const long userId = 1L;
+			const long flightOrderRequestId = 10L;
 			var defaultCreateFlightOrderRequest = GetDefaultCreateFlightOrderRequest();
 			
-			var _mockFlightOrderDomainService = new Mock<FlightOrderDomainService>();
-			_mockFlightOrderDomainService.Setup(s => s.CreateFlightOrderRequest(userId,
+			var mockFlightOrderDomainService = new Mock<FlightOrderDomainService>();
+			mockFlightOrderDomainService.Setup(s => s.CreateFlightOrderRequest(userId,
 				defaultCreateFlightOrderRequest.FlightNumber, defaultCreateFlightOrderRequest.Amount,
 				defaultCreateFlightOrderRequest.DepartureDate)).Returns(flightOrderRequestId);
 			
-			var _mockApprovalSystemProvider = new Mock<IApprovalSystemProvider>();
+			var mockApprovalSystemProvider = new Mock<IApprovalSystemProvider>();
 			
-			var flightOrderService = new FlightOrderService(_mockFlightOrderDomainService.Object, _mockApprovalSystemProvider.Object);
+			var flightOrderService = new FlightOrderService(mockFlightOrderDomainService.Object, mockApprovalSystemProvider.Object);
 			flightOrderService.CreateFlightOrderRequest(userId, defaultCreateFlightOrderRequest);
 
-			_mockFlightOrderDomainService.Verify(s => s.CreateFlightOrderRequest(userId, defaultCreateFlightOrderRequest.FlightNumber, defaultCreateFlightOrderRequest.Amount, defaultCreateFlightOrderRequest.DepartureDate));
-			_mockApprovalSystemProvider.Verify(p => p.Approve(userId, It.Is<ApproveRequest>(r => 
+			mockFlightOrderDomainService.Verify(s => s.CreateFlightOrderRequest(userId, defaultCreateFlightOrderRequest.FlightNumber, defaultCreateFlightOrderRequest.Amount, defaultCreateFlightOrderRequest.DepartureDate));
+			mockApprovalSystemProvider.Verify(p => p.Approve(userId, It.Is<ApproveRequest>(r => 
 				r.OrderRequestId == flightOrderRequestId &&
 				r.Amount == defaultCreateFlightOrderRequest.Amount
 			)));
