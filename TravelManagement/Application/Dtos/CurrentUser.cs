@@ -1,4 +1,4 @@
-namespace TravelManagement.Interface.Filters
+namespace TravelManagement.Application.Dtos
 {
 	public class CurrentUser
 	{
