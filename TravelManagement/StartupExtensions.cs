@@ -65,6 +65,7 @@ namespace TravelManagement
         public static void AddRepository(this IServiceCollection services)
         {
             services.AddTransient<IFlightOrderRequestRepository, FlightOrderRequestRepository>();
+            services.AddTransient<IFlightOrderRepository, FlightOrderRepository>();
         }
     }
 }

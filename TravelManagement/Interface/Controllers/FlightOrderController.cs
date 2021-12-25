@@ -25,5 +25,12 @@ namespace TravelManagement.Interface.Controllers
 			var flightOrderRequestId = _flightOrderService.CreateFlightOrderRequest(_currentUser.UserId, request);
 			return Ok(flightOrderRequestId);
 		}
+		
+		[HttpPost("flight-orders/{oid}/confirmation")]
+		public ActionResult<long> CreateFlightOrderRequest(long oid)
+		{
+			var flightOrderId = _flightOrderService.ConfirmFlightOrderRequest(oid);
+			return Ok(flightOrderId);
+		}
 	}
 }

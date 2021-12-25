@@ -17,12 +17,15 @@ namespace TravelManagement.Test.ControllerFacts
         private readonly Mock<FlightOrderService> _mockFlightOrderService;
         private const long UserId = 100;
         private const long FlightOrderRequestId = 10;
+        private const long FlightOrderId = 20;
 
         public FlightOrderControllerFact()
         {
             _mockFlightOrderService = new Mock<FlightOrderService>();
             _mockFlightOrderService.Setup(s =>
                 s.CreateFlightOrderRequest(It.IsAny<long>(), It.IsAny<CreateFlightOrderRequest>())).Returns(FlightOrderRequestId);
+            _mockFlightOrderService.Setup(s =>
+                s.ConfirmFlightOrderRequest(It.IsAny<long>())).Returns(FlightOrderId);
             Setup(service =>
             {
                 service.AddTransient(_ => _mockFlightOrderService.Object);
@@ -31,7 +34,7 @@ namespace TravelManagement.Test.ControllerFacts
         }
         
         [Fact]
-        public async Task should_return_ok_with_flight_order_id_when_request_is_valid()
+        public async Task should_return_ok_with_flight_order_request_id_when_create_flight_order_request_with_valid_request()
         {
             var httpContent = RequestUtils.ToHttpContent(GetDefaultCreateFlightOrderRequest());
             var httpResponseMessage = await HttpClient.PostAsync("flight-orders", httpContent);
@@ -44,7 +47,7 @@ namespace TravelManagement.Test.ControllerFacts
         [InlineData(null, 100, "2021-12-25")]
         [InlineData("001", -1, "2021-12-25")]
         [InlineData("001", 100, "2020-12-25")]
-        public async Task should_return_bad_request_when_request_data_is_invalid(string flightNumber, decimal amount, DateTime departureDate)
+        public async Task should_return_bad_request_when_create_flight_order_request_with_invalid_request(string flightNumber, decimal amount, DateTime departureDate)
         {
             var defaultCreateFlightOrderRequest = GetDefaultCreateFlightOrderRequest();
             defaultCreateFlightOrderRequest.FlightNumber = flightNumber;
@@ -56,7 +59,7 @@ namespace TravelManagement.Test.ControllerFacts
         }
         
         [Fact]
-        public async Task should_call_flight_order_service_to_create_flight_order_request_when_request_is_valid()
+        public async Task should_call_flight_order_service_to_create_flight_order_request_when_create_flight_order_request_with_valid_request()
         {
             var defaultCreateFlightOrderRequest = GetDefaultCreateFlightOrderRequest();
             var httpContent = RequestUtils.ToHttpContent(defaultCreateFlightOrderRequest);
@@ -68,6 +71,15 @@ namespace TravelManagement.Test.ControllerFacts
                 r.FlightNumber == defaultCreateFlightOrderRequest.FlightNumber &&
                 r.DepartureDate.Date == defaultCreateFlightOrderRequest.DepartureDate.Date
             )));
+        }
+
+        [Fact]
+        public async Task should_return_ok_with_flight_order_id_when_confirm_flight_order_with_valid_request()
+        {
+            var httpResponseMessage = await HttpClient.PostAsync($"flight-orders/{10}/confirmation", null!);
+            httpResponseMessage.EnsureSuccessStatusCode();
+            var responseFlightOrderId = await httpResponseMessage.Content.ReadFromJsonAsync<long>();
+            Assert.Equal(FlightOrderId, responseFlightOrderId);
         }
 
         private CreateFlightOrderRequest GetDefaultCreateFlightOrderRequest()

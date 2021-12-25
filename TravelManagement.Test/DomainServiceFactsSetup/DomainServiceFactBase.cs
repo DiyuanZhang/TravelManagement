@@ -25,5 +25,12 @@ namespace TravelManagement.Test.DomainServiceFactsSetup
 			var session = Provider.GetRequiredService<ISession>();
 			return session.Query<T>();
 		}
+		
+		public void DbInsert<T>(T model) where T : class
+		{
+			var session = Provider.GetRequiredService<ISession>();
+			session.Save(model);
+			session.Flush();
+		}
 	}
 }

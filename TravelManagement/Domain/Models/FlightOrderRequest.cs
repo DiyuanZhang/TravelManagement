@@ -11,6 +11,8 @@ namespace TravelManagement.Domain.Models
 		public virtual DateTime DepartureDate { get; set; }
 		public virtual DateTime CreatedAt { get; set; }
 		public virtual DateTime ExpiredAt { get; set; }
+		
+		public virtual FlightOrder FlightOrder { get; set; }
 
 		public virtual void Create()
 		{

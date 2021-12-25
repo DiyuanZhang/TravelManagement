@@ -22,14 +22,20 @@ namespace TravelManagement.Application.Services
 
 		public virtual long CreateFlightOrderRequest(long userId, CreateFlightOrderRequest createFlightOrderRequest)
 		{
-			var flightOrderRequestId = _flightOrderDomainService.CreateFlightOrderRequest(userId, createFlightOrderRequest.FlightNumber,
+			var flightOrderRequest = _flightOrderDomainService.CreateFlightOrderRequest(userId, createFlightOrderRequest.FlightNumber,
 				createFlightOrderRequest.Amount, createFlightOrderRequest.DepartureDate);
 			_approvalSystemProvider.Approve(userId, new ApproveRequest
 			{
 				Amount = createFlightOrderRequest.Amount,
-				OrderRequestId = flightOrderRequestId
+				OrderRequestId = flightOrderRequest.Id
 			});
-			return flightOrderRequestId;
+			return flightOrderRequest.Id;
+		}
+		
+		public virtual long ConfirmFlightOrderRequest(long flightOrderRequestId)
+		{
+			var flightOrder = _flightOrderDomainService.ConfirmFlightOrderRequest(flightOrderRequestId);
+			return flightOrder.Id;
 		}
 	}
 }
