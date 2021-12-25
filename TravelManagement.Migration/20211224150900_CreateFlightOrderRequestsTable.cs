@@ -13,8 +13,8 @@ namespace TravelManagement.Migration
 				.WithColumn("id").AsInt64().PrimaryKey().Identity()
 				.WithColumn("user_id").AsInt64().NotNullable()
 				.WithColumn("flight_number").AsString().NotNullable()
-				.WithColumn("amount").AsDecimal().NotNullable()
-				.WithColumn("departure_date").AsDateTime()
+				.WithColumn("amount").AsCustom("decimal(15,2)").NotNullable()
+				.WithColumn("departure_date").AsDateTime().NotNullable()
 				.WithColumn("created_at").AsDateTime().NotNullable()
 				.WithColumn("expired_at").AsDateTime().NotNullable();
 		}
