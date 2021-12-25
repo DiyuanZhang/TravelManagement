@@ -21,8 +21,10 @@ namespace TravelManagement
             ConfigureCommonServices(services);
             services.AddProviders(Configuration);
             services.AddApplicationService();
+            services.AddDomainService();
             services.AddAzureServiceBus(Configuration["ServiceBusConnectionString"], Configuration["ServiceBusQueue"]);
             // services.AddSession(Configuration["DBConnectionString"]);
+            services.AddRepository();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

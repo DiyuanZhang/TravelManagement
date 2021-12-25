@@ -8,8 +8,11 @@ using NHibernate;
 using NHibernate.Context;
 using TravelManagement.Application.Providers;
 using TravelManagement.Application.Services;
+using TravelManagement.Domain.Repositories;
+using TravelManagement.Domain.Services;
 using TravelManagement.Infrastructure.Mappings;
 using TravelManagement.Infrastructure.Providers;
+using TravelManagement.Infrastructure.Repositories;
 
 namespace TravelManagement
 {
@@ -44,6 +47,11 @@ namespace TravelManagement
         {
             services.AddScoped<FlightOrderService>();
         }
+        
+        public static void AddDomainService(this IServiceCollection services)
+        {
+            services.AddScoped<FlightOrderDomainService>();
+        }
 
         public static void AddAzureServiceBus(this IServiceCollection services, string serviceBusConnectionString,
             string queueName)
@@ -52,6 +60,11 @@ namespace TravelManagement
             var serviceBusSender = serviceBusClient.CreateSender(queueName);
             services.AddSingleton(serviceBusSender);
             services.AddTransient<IMessageSender, ServiceBusMessageSender>();
+        }
+
+        public static void AddRepository(this IServiceCollection services)
+        {
+            services.AddTransient<IFlightOrderRequestRepository, FlightOrderRequestRepository>();
         }
     }
 }

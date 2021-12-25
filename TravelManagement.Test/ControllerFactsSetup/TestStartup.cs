@@ -14,7 +14,6 @@ namespace TravelManagement.Test.ControllerFactsSetup
 		public void ConfigureServices(IServiceCollection services)
 		{
 			ConfigureCommonServices(services);
-			services.AddInmemorySession();
 		}
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{

@@ -1,14 +1,14 @@
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
-using TravelManagement.Infrastructure.Mappings;
 using Microsoft.Extensions.DependencyInjection;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Context;
 using NHibernate.Engine;
 using NHibernate.Tool.hbm2ddl;
+using TravelManagement.Infrastructure.Mappings;
 
-namespace TravelManagement.Test.ControllerFactsSetup
+namespace TravelManagement.Test.DomainServiceFactsSetup
 {
 	public static class TestStartupExtension
 	{
