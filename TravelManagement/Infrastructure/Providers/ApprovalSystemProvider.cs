@@ -1,6 +1,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using TravelManagement.Application.Dtos;
+using TravelManagement.Application.Exceptions;
 using TravelManagement.Application.Providers;
 using TravelManagement.Infrastructure.Utils;
 
@@ -19,7 +20,10 @@ namespace TravelManagement.Infrastructure.Providers
 		{
 			_httpClient.DefaultRequestHeaders.Add("UserId", userId.ToString());
 			var httpResponseMessage = await _httpClient.PostAsync("approve", RequestUtils.ToHttpContent(request));
-			httpResponseMessage.EnsureSuccessStatusCode();
+			if (!httpResponseMessage.IsSuccessStatusCode)
+			{
+				throw new ServiceUnavailableException("approve system is unavailable");
+			}
 		}
 	}
 }

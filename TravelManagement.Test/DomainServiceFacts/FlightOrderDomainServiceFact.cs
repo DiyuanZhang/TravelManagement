@@ -15,9 +15,9 @@ namespace TravelManagement.Test.DomainServiceFacts
 		public void should_create_flight_order_request_when_call_create_flight_order_request()
 		{
 			var userId = 1L;
-			var flightNumber = "001";
+			var flightNumber = "1001";
 			var amount = 100;
-			var departureDate = DateTime.UtcNow.AddDays(1);
+			var departureDate = DateTime.Parse("2021-10-30");
 			var flightOrderDomainService = Provider.GetRequiredService<FlightOrderDomainService>();
 			var flightOrderRequest = flightOrderDomainService.CreateFlightOrderRequest(userId, flightNumber, amount, departureDate);
 			var dbFlightOrderRequest = DbQuery<FlightOrderRequest>().SingleOrDefault(r => r.Id == flightOrderRequest.Id);

@@ -41,6 +41,9 @@ namespace TravelManagement
             services.AddHttpClient<IApprovalSystemProvider, ApprovalSystemProvider>(
                     name: "Approval System Provider")
                 .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration["ApprovalSystemUrl"]));
+            services.AddHttpClient<IPaymentSystemProvider, PaymentSystemProvider>(
+                    name: "Payment System Provider")
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration["PaymentSystemUrl"]));
         }
 
         public static void AddApplicationService(this IServiceCollection services)

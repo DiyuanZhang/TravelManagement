@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using TravelManagement.Application.Dtos;
+using TravelManagement.Infrastructure.Utils;
 using TravelManagement.Interface.Controllers;
 using TravelManagement.Interface.Filters;
 
@@ -26,6 +27,7 @@ namespace TravelManagement
             services.AddAzureServiceBus(Configuration["ServiceBusConnectionString"], Configuration["ServiceBusQueue"]);
             services.AddSession(Configuration["DBConnectionString"]);
             services.AddRepository();
+            services.AddTransient<ITimeProvider, TimeProvider>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

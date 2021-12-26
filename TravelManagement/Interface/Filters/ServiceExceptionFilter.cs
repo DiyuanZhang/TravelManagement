@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
+using TravelManagement.Application.Exceptions;
 using TravelManagement.Interface.Exceptions;
 
 namespace TravelManagement.Interface.Filters
@@ -23,6 +24,7 @@ namespace TravelManagement.Interface.Filters
 			context.Result = context.Exception switch
 			{
 				BadRequestException exception => new BadRequestObjectResult(exception.Message),
+				ServiceUnavailableException exception => new ObjectResult(exception.Message) { StatusCode = StatusCodes.Status503ServiceUnavailable},
 				_ => new ObjectResult("An error occurred in travel management service") { StatusCode = StatusCodes.Status500InternalServerError }
 			};
 

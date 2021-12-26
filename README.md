@@ -13,7 +13,7 @@ dotnet run "{DBConnectionString}"
 ## How to run application
 ```
 dotnet restore
-set value for the DBConnectionString & ServiceBusConnectionString & ServiceBusQueue & ApprovalSystemUrl in appsettings.json
+set value for the DBConnectionString & ServiceBusConnectionString & ServiceBusQueue & ApprovalSystemUrl & PaymentSystemUrl in appsettings.json
 dotnet run --project .\TravelManagement\
 ```
 visit https://localhost:5001/swagger/index.html to view all apis.
